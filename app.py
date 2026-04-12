@@ -35,7 +35,7 @@ def get_weather(city):
 
     return f"{temp}°C, {condition}", formatted_time
 
-def get_ride_suggestions(user_input,weather,city,city_time):
+def get_ride_suggestions(user_input, weather, city, city_time, parking_pref):
     global previous_places
     current_time = datetime.datetime.now().strftime("%H:%M")
     
@@ -137,7 +137,18 @@ DO NOT add extra lines.
     if len(filtered_output) == 0:
         final_result = result   # fallback to raw output
     else:
-        final_result = "\n".join(filtered_output)
+        renumbered_output = []
+
+        for i, line in enumerate(filtered_output, start=1):
+            try:
+                # remove old number
+                content = line.split(".", 1)[1].strip()
+                new_line = f"{i}. {content}"
+                renumbered_output.append(new_line)
+            except:
+                renumbered_output.append(line)
+
+        final_result = "\n".join(renumbered_output)
 
     # store memory
     previous_places.extend(places)
