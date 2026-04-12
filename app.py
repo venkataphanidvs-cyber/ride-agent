@@ -1,4 +1,5 @@
 import os
+import streamlit as st
 from openai import OpenAI
 from dotenv import load_dotenv
 import datetime
@@ -14,12 +15,14 @@ except:
 # Load API key from .env file
 load_dotenv()
 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+# Get API key (priority: Streamlit → fallback: .env)
+OPENAI_KEY = st.secrets.get("OPENAI_API_KEY") or os.getenv("OPENAI_API_KEY")
+WEATHER_KEY = st.secrets.get("WEATHER_API_KEY") or os.getenv("WEATHER_API_KEY")
 
-
+client = OpenAI(api_key=OPENAI_KEY)
 
 def get_weather(city):
-    api_key = os.getenv("WEATHER_API_KEY")
+    api_key = WEATHER_KEY
 
     url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric"
 
