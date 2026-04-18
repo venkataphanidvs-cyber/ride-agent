@@ -59,7 +59,10 @@ if st.button("Get Ride Suggestions"):
         
 
         try:
-            data = json.loads(result)
+            if result.strip().startswith("["):
+                data = json.loads(result)
+            else:
+                raise ValueError("Not JSON")
 
             for idx, item in enumerate(data):
                 def clean(text):
@@ -92,5 +95,10 @@ if st.button("Get Ride Suggestions"):
                 )
 
         except Exception as e:
-            st.error("⚠️ Failed to parse response")
-            st.text(result)
+            st.warning("⚠️ Showing fallback results")
+
+            lines = result.split("\n")
+
+            for line in lines:
+                if line.strip():
+                    st.write(line)
